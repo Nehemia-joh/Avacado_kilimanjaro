@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
     <script>
         tailwind.config = {
@@ -1017,7 +1018,7 @@
         <div class="chat-window">
             <div class="chat-header">
                 <span>Avocado Kili Chat</span>
-                <span class="chat-close">&times;</span>
+                <span class="chat-close">×</span>
             </div>
             <div class="chat-messages"></div>
             <div class="chat-input">
@@ -1102,7 +1103,7 @@
             section.style.transform = 'translateY(30px)';
             appearOnScroll.observe(section);
         });
-
+        
         // Chat Widget Functionality
         const chatToggle = document.querySelector('.chat-toggle');
         const chatWindow = document.querySelector('.chat-window');
@@ -1110,15 +1111,18 @@
         const chatMessages = document.querySelector('.chat-messages');
         const chatInput = document.querySelector('.chat-input input');
         const chatSend = document.querySelector('.chat-input button');
-
+        
         // Toggle chat window
         chatToggle.addEventListener('click', () => {
             chatWindow.classList.toggle('open');
+            if (chatWindow.classList.contains('open') && !chatMessages.querySelector('.message')) {
+                startChatFlow();
+            }
         });
         chatClose.addEventListener('click', () => {
             chatWindow.classList.remove('open');
         });
-
+        
         // Send message
         function sendMessage(text, sender) {
             const message = document.createElement('div');
@@ -1127,40 +1131,201 @@
             chatMessages.appendChild(message);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
-
+        
+        // Clear chat
+        function clearChat() {
+            chatMessages.innerHTML = '';
+            chatState = {
+                step: 0,
+                mode: null,
+                questions: [
+                    'Are you planning a trip to Kilimanjaro or Zanzibar? (Please answer "Yes" or "No")',
+                    'Would you like to include a Kilimanjaro climb in your trip? (Yes/No)',
+                    'Are you interested in a Zanzibar beach getaway? (Yes/No)'
+                ],
+                expectingTripDetails: false
+            };
+            startChatFlow();
+        }
+        
+        // Chat flow state
+        let chatState = {
+            step: 0,
+            mode: null, // 'rooms', 'personalized', or 'trips'
+            questions: [
+                'Are you planning a trip to Kilimanjaro or Zanzibar? (Please answer "Yes" or "No")',
+                'Would you like to include a Kilimanjaro climb in your trip? (Yes/No)',
+                'Are you interested in a Zanzibar beach getaway? (Yes/No)'
+            ],
+            expectingTripDetails: false
+        };
+        
+        // Start chat flow
+        function startChatFlow() {
+            sendMessage('Welcome to Avocado Kilimanjaro Lodge! Type "rooms" for room info, "personalized" to plan a custom trip, "trips" for trip packages, or "clear" to reset the chat.', 'bot');
+            chatState.step = 1;
+        }
+        
+        // Handle user input
+        function handleUserInput(text) {
+            sendMessage(text, 'user');
+            const lowerText = text.trim().toLowerCase();
+        
+            // Handle "clear" command
+            if (lowerText === 'clear') {
+                clearChat();
+                return;
+            }
+        
+            // Handle personalized trip request
+            if (lowerText.startsWith('personalized')) {
+                chatState.mode = 'personalized';
+                const tripDetails = text.trim().substring(12).trim(); // Remove "personalized" prefix
+                if (tripDetails) {
+                    // Send trip details to backend
+                    $.ajax({
+                        url: 'save_trip.php',
+                        method: 'POST',
+                        data: { trip_details: tripDetails },
+                        success: function(response) {
+                            try {
+                                const res = JSON.parse(response);
+                                if (res.status === 'success') {
+                                    sendMessage('Request saved! Our team will review your personalized trip details and contact you soon.', 'bot');
+                                } else {
+                                    sendMessage('Sorry, there was an error saving your request. Please try again or contact us directly.', 'bot');
+                                }
+                            } catch (e) {
+                                sendMessage('Error processing the server response. Please try again.', 'bot');
+                            }
+                        },
+                        error: function() {
+                            sendMessage('Error connecting to the server. Please try again later.', 'bot');
+                        }
+                    });
+                    chatState.expectingTripDetails = false;
+                    chatState.mode = null;
+                    chatState.step = 0;
+                    setTimeout(startChatFlow, 1000);
+                } else {
+                    sendMessage('Please provide your trip details after "personalized" (e.g., "personalized 7-day Kilimanjaro climb and Zanzibar beach").', 'bot');
+                    chatState.expectingTripDetails = true;
+                }
+                return;
+            }
+        
+            // Handle expecting trip details for personalized mode
+            if (chatState.expectingTripDetails && chatState.mode === 'personalized') {
+                // Send trip details to backend
+                $.ajax({
+                    url: 'save_trip.php',
+                    method: 'POST',
+                    data: { trip_details: text },
+                    success: function(response) {
+                        try {
+                            const res = JSON.parse(response);
+                            if (res.status === 'success') {
+                                sendMessage('Request saved! Our team will review your personalized trip details and contact you soon.', 'bot');
+                            } else {
+                                sendMessage('Sorry, there was an error saving your request. Please try again or contact us directly.', 'bot');
+                            }
+                        } catch (e) {
+                            sendMessage('Error processing the server response. Please try again.', 'bot');
+                        }
+                    },
+                    error: function() {
+                        sendMessage('Error connecting to the server. Please try again later.', 'bot');
+                    }
+                });
+                chatState.expectingTripDetails = false;
+                chatState.mode = null;
+                chatState.step = 0;
+                setTimeout(startChatFlow, 1000);
+                return;
+            }
+        
+            // Handle "trips" command
+            if (lowerText === 'trips' && chatState.step === 1) {
+                chatState.mode = 'trips';
+                sendMessage('Explore our curated trips:\n1. **Climb & Coast Combo** ($3500/person): 7-day Kilimanjaro climb + 5-day Zanzibar beach getaway at Mnemba Atoll.\n2. **Luxury Honeymoon** ($4500/couple): Sunrise summit photos, private dhow cruises in Zanzibar, and VIP tree canopy dinners.\n3. **Adventure Explorer** ($2800/person): Arusha safari, Colobus monkey tracking, and paragliding over Kilimanjaro.\n\nInterested in booking a trip? Type "Yes" or "No".', 'bot');
+                chatState.step = 2;
+                return;
+            }
+        
+            // Handle "rooms" command
+            if (lowerText === 'rooms' && chatState.step === 1) {
+                chatState.mode = 'rooms';
+                sendMessage('We offer three luxurious options:\n1. Private Farm Villa ($650/night): 360° avocado grove views, solar-heated plunge pool, mahogany beds.\n2. Family Farm Villa ($880/night): Spacious with multiple bedrooms, private deck, butler service.\n3. Deluxe Garden Room ($320/night): Private terrace, Maasai-inspired textiles, Kilimanjaro coffee minibar.\n\nInterested in planning a trip? Type "Yes" or "No".', 'bot');
+                chatState.step = 2;
+                return;
+            }
+        
+            // Handle question flow for "rooms" or "trips" mode
+            if ((chatState.mode === 'rooms' || chatState.mode === 'trips') && chatState.step >= 2) {
+                if (lowerText === 'yes' && chatState.step <= chatState.questions.length + 1) {
+                    if (chatState.step - 2 < chatState.questions.length) {
+                        setTimeout(() => {
+                            sendMessage(chatState.questions[chatState.step - 2], 'bot');
+                            chatState.step++;
+                        }, 1000);
+                    } else {
+                        setTimeout(() => {
+                            sendMessage('Awesome! Please tell us more about your trip preferences (e.g., dates, activities, room type).', 'bot');
+                            chatState.expectingTripDetails = true;
+                            chatState.mode = 'personalized'; // Switch to personalized for details
+                        }, 1000);
+                    }
+                } else if (lowerText === 'no' && chatState.step <= chatState.questions.length + 1) {
+                    setTimeout(() => {
+                        if (chatState.step - 2 < chatState.questions.length) {
+                            sendMessage(chatState.questions[chatState.step - 2], 'bot');
+                            chatState.step++;
+                        } else {
+                            sendMessage('No worries! Type "rooms", "personalized", "trips", or "clear" to continue.', 'bot');
+                            chatState.step = 0;
+                            chatState.mode = null;
+                            setTimeout(startChatFlow, 1000);
+                        }
+                    }, 1000);
+                } else {
+                    setTimeout(() => {
+                        sendMessage('Please answer with "Yes" or "No" to continue, or type "rooms", "personalized", "trips", or "clear".', 'bot');
+                    }, 1000);
+                }
+                return;
+            }
+        
+            // Default response for invalid input
+            if (chatState.step === 1) {
+                sendMessage('Please type "rooms" for room info, "personalized" to plan a custom trip, "trips" for trip packages, or "clear" to reset the chat.', 'bot');
+            }
+        }
+        
         // Handle send button click
         chatSend.addEventListener('click', () => {
             const text = chatInput.value.trim();
             if (text) {
-                sendMessage(text, 'user');
+                handleUserInput(text);
                 chatInput.value = '';
-                // Simulate bot response
-                setTimeout(() => {
-                    const responses = [
-                        'Great! How can I assist you with your Kili + Zanzibar adventure?',
-                        'Interested in our Climb & Coast package? Let me share details!',
-                        'Ask me about rooms, dining, or Zanzibar logistics!'
-                    ];
-                    sendMessage(responses[Math.floor(Math.random() * responses.length)], 'bot');
-                }, 1000);
             }
         });
-
+        
         // Handle enter key press
         chatInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 chatSend.click();
             }
         });
-
+        
         // Welcome message after 30 seconds
         setTimeout(() => {
             const currentHash = window.location.hash || '#home';
-            if (['#home', '#zanzibar', '#rooms'].includes(currentHash)) {
-                sendMessage('Plan your Kili + Zanzibar combo today! Let’s get started.', 'bot');
+            if (['#home', '#zanzibar', '#rooms'].includes(currentHash) && !chatWindow.classList.contains('open')) {
+                sendMessage('Welcome to Avocado Kilimanjaro Lodge! Type "rooms" for room info, "personalized" to plan a custom trip, "trips" for trip packages, or "clear" to reset the chat.', 'bot');
                 chatWindow.classList.add('open');
+                chatState.step = 1;
             }
         }, 30000);
-    </script>
+        </script>
 </body>
 </html>
