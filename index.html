@@ -30,57 +30,52 @@
     
     <style>
         body {
-            background-color: #f8f5f0; /* Overall light background */
-            color: #333; /* Default text color */
-            scroll-behavior: smooth; /* Smooth scrolling for anchor links */
+            background-color: #f8f5f0;
+            color: #333;
+            scroll-behavior: smooth;
         }
         
-        /* Hero Section Background (Kilimanjaro with overlay) */
         .hero-section {
             background: linear-gradient(rgba(26, 46, 31, 0.6), rgba(26, 46, 31, 0.6)), url('https://images.unsplash.com/photo-1512100356356-de1b84283e18?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');
-            /* Consider using a video here as per initial docs for more dynamism if performance allows */
             background-size: cover;
             background-position: center;
-            height: 100vh; /* Full viewport height */
+            height: 100vh;
         }
         
-        /* Room Card Hover Effect */
         .room-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .room-card:hover {
-            transform: translateY(-10px); /* Lifts the card */
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* Stronger shadow on hover */
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
         
-        /* Gallery Grid Layout */
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Adjusted min-width for larger items */
-            gap: 1.5rem; /* Increased gap */
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
         }
         .gallery-item {
             overflow: hidden;
-            border-radius: 12px; /* Slightly more rounded corners */
-            height: 300px; /* Taller gallery items */
+            border-radius: 12px;
+            height: 300px;
             cursor: pointer;
-            position: relative; /* For overlay */
+            position: relative;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .gallery-item:hover {
-            transform: scale(1.02); /* Subtle zoom on hover */
+            transform: scale(1.02);
             box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.2);
         }
         .gallery-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.6s ease; /* Slower, smoother image zoom */
+            transition: transform 0.6s ease;
         }
         .gallery-item:hover img {
             transform: scale(1.1);
         }
-        /* Gallery Item Overlay for text */
         .gallery-item-overlay {
             position: absolute;
             bottom: 0;
@@ -98,14 +93,12 @@
             opacity: 1;
         }
 
-        /* Testimonial Card Styling */
         .testimonial-card {
-            background: rgba(255, 255, 255, 0.95); /* Slightly more opaque */
-            backdrop-filter: blur(8px); /* Subtle blur effect */
-            border: 1px solid rgba(26, 46, 31, 0.1); /* Light border */
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(26, 46, 31, 0.1);
         }
         
-        /* Parallax Section Background */
         .parallax {
             background-attachment: fixed;
             background-position: center;
@@ -113,34 +106,31 @@
             background-size: cover;
         }
         
-        /* Booking Form Background */
         .booking-form {
-            background: rgba(255, 255, 255, 0.97); /* Almost opaque white for form */
-            backdrop-filter: blur(12px); /* Stronger blur for visual interest */
-            border: 1px solid rgba(26, 46, 31, 0.1); /* Light border */
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(26, 46, 31, 0.1);
         }
         
-        /* Navigation Link Underline Effect */
         .nav-link {
-            position: relative; /* For absolute pseudo-element */
-            padding-bottom: 0.25rem; /* Space for underline */
+            position: relative;
+            padding-bottom: 0.25rem;
         }
         .nav-link::after {
             content: '';
             position: absolute;
             bottom: 0;
-            left: 50%; /* Start from center */
+            left: 50%;
             width: 0;
             height: 2px;
-            background: #d4a96a; /* Accent color for underline */
-            transition: width 0.3s ease-out, left 0.3s ease-out; /* Smooth transition */
+            background: #d4a96a;
+            transition: width 0.3s ease-out, left 0.3s ease-out;
         }
         .nav-link:hover::after {
             width: 100%;
-            left: 0; /* Expand to full width from center */
+            left: 0;
         }
 
-        /* Hamburger Menu Animation */
         .hamburger {
             cursor: pointer;
             transition: all 0.3s ease;
@@ -158,39 +148,161 @@
             transform: translateY(-5.5px) rotate(-45deg);
         }
 
-        /* Mobile Menu Slide-down Effect */
         .mobile-menu {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.6s cubic-bezier(0.86, 0, 0.07, 1); /* Smoother animation curve */
+            transition: max-height 0.6s cubic-bezier(0.86, 0, 0.07, 1);
         }
         .mobile-menu.open {
-            max-height: 500px; /* Arbitrary large value to ensure it opens fully */
+            max-height: 500px;
         }
 
-        /* Section Title Underline */
         .section-title {
             position: relative;
             display: inline-block;
             margin-bottom: 2rem;
-            padding-bottom: 10px; /* Space for the line */
+            padding-bottom: 10px;
         }
         .section-title::after {
             content: '';
             position: absolute;
-            bottom: 0; /* At the bottom of the padding */
+            bottom: 0;
             left: 50%;
-            transform: translateX(-50%); /* Center the line */
-            width: 60px; /* Fixed width for a subtle underline */
+            transform: translateX(-50%);
+            width: 60px;
             height: 3px;
-            background: #d4a96a; /* Accent color */
+            background: #d4a96a;
             border-radius: 2px;
         }
 
-        /* Call to action buttons hover */
         .btn-primary-outline:hover {
             background-color: #fff;
             color: #1a2e1f;
+        }
+
+        /* Chat Widget Styles */
+        .chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .chat-toggle {
+            background-color: #4a7c59;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        .chat-toggle:hover {
+            background-color: #8c6d46;
+            transform: scale(1.1);
+        }
+        .chat-window {
+            display: none;
+            width: 320px;
+            height: 400px;
+            background-color: #f8f5f0;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            flex-direction: column;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        .chat-window.open {
+            display: flex;
+        }
+        .chat-header {
+            background-color: #4a7c59;
+            color: white;
+            padding: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-close {
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background-color: #fff;
+        }
+        .message {
+            margin-bottom: 12px;
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 80%;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .message.bot {
+            background-color: #4a7c59;
+            color: white;
+            align-self: flex-start;
+        }
+        .message.user {
+            background-color: #d4a96a;
+            color: #1a2e1f;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        .chat-input {
+            display: flex;
+            padding: 10px;
+            background-color: #f8f5f0;
+            border-top: 1px solid #e0e0e0;
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            outline: none;
+            font-size: 14px;
+        }
+        .chat-input button {
+            background-color: #4a7c59;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            margin-left: 8px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .chat-input button:hover {
+            background-color: #8c6d46;
+        }
+        @media (max-width: 480px) {
+            .chat-window {
+                width: 280px;
+                height: 360px;
+            }
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 1.2s ease-out forwards;
+            opacity: 0;
         }
     </style>
 </head>
@@ -745,7 +857,8 @@
                     Avocado Kilimanjaro Lodge is nestled in a serene landscape at the foothills of Mount Kilimanjaro, offering both seclusion and accessibility. Just a 5-minute drive from Marangu Gate.
                 </p>
             </div>
-            <div class="relative overflow-hidden rounded-xl shadow-2xl" style="padding-top: 56.25%;"> <iframe 
+            <div class="relative overflow-hidden rounded-xl shadow-2xl" style="padding-top: 56.25%;">
+                <iframe 
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15873.342410884218!2d37.35561081979927!3d-3.0805374465551984!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x183713f0a1c6a281%3A0x86c28f32230491d0!2sMount%20Kilimanjaro!5e0!3m2!1sen!2stz!4v1700000000000!5m2!1sen!2stz" 
                     width="100%" 
                     height="100%" 
@@ -896,6 +1009,24 @@
         </div>
     </footer>
 
+    <!-- Chat Widget -->
+    <div class="chat-widget">
+        <div class="chat-toggle">
+            <i class="fas fa-comment-dots text-2xl"></i>
+        </div>
+        <div class="chat-window">
+            <div class="chat-header">
+                <span>Avocado Kili Chat</span>
+                <span class="chat-close">&times;</span>
+            </div>
+            <div class="chat-messages"></div>
+            <div class="chat-input">
+                <input type="text" placeholder="Type your message..." />
+                <button>Send</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Mobile Menu Toggle
         const hamburger = document.querySelector('.hamburger');
@@ -903,10 +1034,9 @@
         
         hamburger.addEventListener('click', () => {
             mobileMenu.classList.toggle('open');
-            hamburger.classList.toggle('open'); // Toggle class for hamburger animation
+            hamburger.classList.toggle('open');
         });
         
-        // Close mobile menu when clicking a link
         const mobileLinks = document.querySelectorAll('.mobile-menu a');
         mobileLinks.forEach(link => {
             link.addEventListener('click', () => {
@@ -915,10 +1045,10 @@
             });
         });
         
-        // Sticky navigation background and padding adjustment
+        // Sticky navigation
         window.addEventListener('scroll', function() {
             const nav = document.querySelector('nav');
-            if (window.scrollY > 80) { // Slightly increased scroll threshold
+            if (window.scrollY > 80) {
                 nav.classList.add('shadow-lg', 'py-3');
                 nav.classList.remove('py-4');
             } else {
@@ -927,56 +1057,33 @@
             }
         });
         
-        // Smooth scrolling for anchor links (adjusted offset)
+        // Smooth scrolling
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                
                 const targetId = this.getAttribute('href');
                 const target = document.querySelector(targetId);
-                
                 if (target) {
                     const offsetTop = target.offsetTop;
-                    const navHeight = document.querySelector('nav').offsetHeight; // Get current nav height
-                    
+                    const navHeight = document.querySelector('nav').offsetHeight;
                     window.scrollTo({
-                        top: offsetTop - navHeight - 20, // Adjust for fixed header and a little extra space
+                        top: offsetTop - navHeight - 20,
                         behavior: 'smooth'
                     });
                 }
             });
         });
         
-        // Basic animation for hero section text (if video is not used, CSS can handle it)
-        // If a video is used, a slight delay before text appears might be good.
+        // Hero section animation
         const heroContent = document.querySelector('.hero-section > div');
-        heroContent.style.animation = 'fadeInUp 1.2s ease-out forwards'; // CSS animation for hero text
+        heroContent.style.animation = 'fadeInUp 1.2s ease-out forwards';
         
-        // CSS for fadeInUp animation (add this to your <style> block as well)
-        /*
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .animate-fade-in-up {
-            animation: fadeInUp 1.2s ease-out forwards;
-            opacity: 0; // Start hidden
-        }
-        */
-
-        // Simple Intersection Observer for sections to fade in on scroll
-        const faders = document.querySelectorAll('.fade-in-section'); // Add this class to sections you want to animate
+        // Intersection Observer for sections
+        const faders = document.querySelectorAll('.fade-in-section');
         const appearOptions = {
-            threshold: 0.2, // When 20% of the section is visible
-            rootMargin: "0px 0px -50px 0px" // Start animation slightly before it's fully in view
+            threshold: 0.2,
+            rootMargin: "0px 0px -50px 0px"
         };
-
         const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
             entries.forEach(entry => {
                 if (!entry.isIntersecting) {
@@ -989,15 +1096,71 @@
                 }
             });
         }, appearOptions);
-
-        // Add 'fade-in-section' class to your main sections (e.g., About, Rooms, Dining, Gallery, Experiences, Map, Zanzibar)
         document.querySelectorAll('#about, #rooms, #dining, #experiences, #gallery, #zanzibar, #map-location').forEach(section => {
             section.classList.add('fade-in-section');
-            section.style.opacity = 0; // Initially hide them
-            section.style.transform = 'translateY(30px)'; // Start slightly below
+            section.style.opacity = 0;
+            section.style.transform = 'translateY(30px)';
             appearOnScroll.observe(section);
         });
 
+        // Chat Widget Functionality
+        const chatToggle = document.querySelector('.chat-toggle');
+        const chatWindow = document.querySelector('.chat-window');
+        const chatClose = document.querySelector('.chat-close');
+        const chatMessages = document.querySelector('.chat-messages');
+        const chatInput = document.querySelector('.chat-input input');
+        const chatSend = document.querySelector('.chat-input button');
+
+        // Toggle chat window
+        chatToggle.addEventListener('click', () => {
+            chatWindow.classList.toggle('open');
+        });
+        chatClose.addEventListener('click', () => {
+            chatWindow.classList.remove('open');
+        });
+
+        // Send message
+        function sendMessage(text, sender) {
+            const message = document.createElement('div');
+            message.classList.add('message', sender);
+            message.textContent = text;
+            chatMessages.appendChild(message);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Handle send button click
+        chatSend.addEventListener('click', () => {
+            const text = chatInput.value.trim();
+            if (text) {
+                sendMessage(text, 'user');
+                chatInput.value = '';
+                // Simulate bot response
+                setTimeout(() => {
+                    const responses = [
+                        'Great! How can I assist you with your Kili + Zanzibar adventure?',
+                        'Interested in our Climb & Coast package? Let me share details!',
+                        'Ask me about rooms, dining, or Zanzibar logistics!'
+                    ];
+                    sendMessage(responses[Math.floor(Math.random() * responses.length)], 'bot');
+                }, 1000);
+            }
+        });
+
+        // Handle enter key press
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                chatSend.click();
+            }
+        });
+
+        // Welcome message after 30 seconds
+        setTimeout(() => {
+            const currentHash = window.location.hash || '#home';
+            if (['#home', '#zanzibar', '#rooms'].includes(currentHash)) {
+                sendMessage('Plan your Kili + Zanzibar combo today! Let’s get started.', 'bot');
+                chatWindow.classList.add('open');
+            }
+        }, 30000);
     </script>
 </body>
 </html>
